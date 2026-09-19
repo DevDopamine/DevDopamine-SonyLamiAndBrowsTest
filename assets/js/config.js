@@ -55,7 +55,7 @@ window.APP_CONFIG = {
     // Адрес вашего serverless-эндпоинта (Cloudflare Worker и т. п.).
     // Токен бота здесь НЕ указывается — он живёт только внутри Worker'а.
     // Пока поле пустое, отправка просто не выполняется, тест работает как обычно.
-    TELEGRAM_ENDPOINT: 'https://test-telegram-proxy.dev-dopamine05.workers.dev/',
+    TELEGRAM_ENDPOINT: 'https://proud-union-069f.dev-dopamine05.workers.dev/',
 
     // Необязательный «ключ доступа» к эндпоинту. Отсекает случайный мусор.
     // Полноценной защитой не является (виден в исходном коде страницы).
