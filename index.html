@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F6F3F1">
+<title>Итоговое тестирование</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+
+<body>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="bg-decor" aria-hidden="true"><span class="blob blob-1"></span><span class="blob blob-2"></span></div>
+
+<main id="app">
+
+  <!-- ============ ЗАГРУЗКА ============ -->
+  <section class="screen" id="screen-loading">
+    <div class="center-wrap"><div class="spinner" aria-label="Загрузка"></div></div>
+  </section>
+
+  <!-- ============ НЕЙТРАЛЬНАЯ СТРАНИЦА ============ -->
+  <section class="screen" id="screen-welcome" hidden>
+    <div class="center-wrap">
+      <div class="card card-narrow text-center">
+        <div class="emblem" aria-hidden="true">🤍</div>
+        <h1 class="display">Добро пожаловать</h1>
+        <p class="lead">Эта страница предназначена для прохождения итогового тестирования.</p>
+        <p class="muted small">Откройте персональную ссылку, которую прислал ваш преподаватель.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ТЕСТ НЕ НАЙДЕН ============ -->
+  <section class="screen" id="screen-notfound" hidden>
+    <div class="center-wrap">
+      <div class="card card-narrow text-center">
+        <div class="emblem" aria-hidden="true">🔍</div>
+        <h1 class="display">Тестирование не найдено</h1>
+        <p class="lead">Возможно, ссылка указана неверно или устарела.</p>
+        <button type="button" class="btn btn-primary" id="notfound-back">Вернуться</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ СТАРТОВЫЙ ЭКРАН ============ -->
+  <section class="screen" id="screen-start" hidden>
+    <div class="center-wrap">
+      <div class="card card-start">
+
+        <div class="resume-box" id="resume-box" hidden>
+          <div class="resume-icon" aria-hidden="true">⏱</div>
+          <div class="resume-text">
+            <strong>Найдено незавершённое тестирование</strong>
+            <span id="resume-meta" class="muted small"></span>
+          </div>
+          <div class="resume-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="btn-resume">Продолжить тестирование</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-restart">Начать заново</button>
+          </div>
+        </div>
+
+        <p class="eyebrow" id="start-brand">Итоговое тестирование</p>
+        <h1 class="display" id="start-title">—</h1>
+        <p class="lead" id="start-subtitle">Проверьте свои знания по теоретической части обучения</p>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-value" id="start-count">—</span>
+            <span class="meta-label">вопросов</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-value" id="start-time">—</span>
+            <span class="meta-label">примерно</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-value" id="start-pass">—</span>
+            <span class="meta-label">проходной балл</span>
+          </div>
+        </div>
+
+        <ul class="hint-list">
+          <li>Вопросы показываются по одному, к предыдущим можно вернуться.</li>
+          <li>Встречаются вопросы с одним и несколькими ответами, сопоставления, последовательности и открытые ответы.</li>
+          <li>Правильные ответы станут доступны только после завершения теста.</li>
+          <li>Прогресс сохраняется автоматически — страницу можно случайно закрыть.</li>
+        </ul>
+
+        <form id="name-form" class="name-form" novalidate>
+          <label class="field-label" for="student-name">Как вас зовут?</label>
+          <input class="field" type="text" id="student-name" name="name" placeholder="Имя и фамилия"
+                 autocomplete="name" maxlength="60" required aria-describedby="name-error">
+          <p class="field-error" id="name-error" role="alert" hidden>Пожалуйста, введите имя и фамилию.</p>
+          <button type="submit" class="btn btn-primary btn-block" id="btn-start">Начать тестирование</button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ЭКРАН ВОПРОСА ============ -->
+  <section class="screen screen-quiz" id="screen-quiz" hidden>
+
+    <header class="quiz-header">
+      <div class="quiz-header-row">
+        <div class="quiz-id">
+          <span class="chip chip-test" id="quiz-test">—</span>
+          <span class="chip chip-name" id="quiz-name">—</span>
+        </div>
+        <div class="quiz-counter"><span id="quiz-counter">Вопрос 1 из 1</span></div>
+      </div>
+      <div class="progress" role="progressbar" aria-label="Прогресс тестирования" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </header>
+
+    <div class="quiz-body">
+      <article class="card card-question" id="question-card" aria-live="polite">
+        <!-- наполняется из JS -->
+      </article>
+    </div>
+
+    <footer class="quiz-nav">
+      <button type="button" class="btn btn-ghost" id="btn-prev">Назад</button>
+      <span class="nav-status" id="nav-status"></span>
+      <button type="button" class="btn btn-primary" id="btn-next">Далее</button>
+    </footer>
+  </section>
+
+  <!-- ============ РЕЗУЛЬТАТ ============ -->
+  <section class="screen" id="screen-result" hidden>
+    <div class="center-wrap">
+      <div class="card card-result">
+
+        <div class="score-ring-wrap">
+          <svg class="score-ring" viewBox="0 0 140 140" role="img" aria-labelledby="ring-label">
+            <title id="ring-label">Результат тестирования</title>
+            <circle class="ring-track" cx="70" cy="70" r="62"></circle>
+            <circle class="ring-value" cx="70" cy="70" r="62" id="ring-value"></circle>
+          </svg>
+          <div class="score-center">
+            <span class="score-percent" id="result-percent">0%</span>
+            <span class="score-caption" id="result-fraction">—</span>
+          </div>
+        </div>
+
+        <span class="status-badge" id="result-badge">—</span>
+        <h1 class="display" id="result-title">Тестирование завершено!</h1>
+        <p class="result-person"><span id="result-name">—</span> · <span id="result-test">—</span></p>
+
+        <div class="stats-grid">
+          <div class="stat stat-success"><span class="stat-value" id="stat-correct">0</span><span class="stat-label">правильных</span></div>
+          <div class="stat stat-error"><span class="stat-value" id="stat-wrong">0</span><span class="stat-label">ошибок</span></div>
+          <div class="stat stat-neutral"><span class="stat-value" id="stat-percent">0%</span><span class="stat-label">выполнено</span></div>
+          <div class="stat stat-manual" id="stat-manual-box" hidden><span class="stat-value" id="stat-manual">0</span><span class="stat-label">на проверке</span></div>
+        </div>
+
+        <div class="congrats">
+          <div class="congrats-glow" aria-hidden="true"></div>
+          <p class="congrats-title">Тестирование завершено! Поздравляем! 🎓</p>
+          <p>Вы проверили свои знания по теоретической части обучения.</p>
+          <p>Но помните: хороший мастер — это не только знания, но и умение применять их на практике.</p>
+          <p>Отрабатывайте технику, анализируйте каждую работу, замечайте свои ошибки и не бойтесь задавать вопросы.</p>
+          <p class="congrats-outro">Навык формируется через практику. Продолжайте развиваться — и результат обязательно придёт. 🤍</p>
+        </div>
+
+        <div class="send-status" id="send-status" hidden>
+          <span class="send-text" id="send-text"></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-resend" hidden>Повторить отправку</button>
+        </div>
+
+        <div class="result-actions">
+          <button type="button" class="btn btn-primary btn-block" id="btn-review">Посмотреть результаты</button>
+          <button type="button" class="btn btn-outline btn-block" id="btn-done">Завершить</button>
+        </div>
+        <button type="button" class="link-quiet" id="btn-retake">Пройти тест заново</button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ РАЗБОР ============ -->
+  <section class="screen" id="screen-review" hidden>
+    <div class="review-wrap">
+      <header class="review-header">
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-review-back">← К результату</button>
+        <h1 class="review-title">Разбор ответов</h1>
+        <p class="muted small" id="review-sub">—</p>
+      </header>
+      <div id="review-list" class="review-list"></div>
+      <div class="review-footer">
+        <button type="button" class="btn btn-primary" id="btn-review-back2">Вернуться к результату</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ФИНАЛ ============ -->
+  <section class="screen" id="screen-bye" hidden>
+    <div class="center-wrap">
+      <div class="card card-narrow text-center">
+        <div class="emblem" aria-hidden="true">🤍</div>
+        <h1 class="display">Спасибо!</h1>
+        <p class="lead">Результат сохранён. Эту страницу можно закрыть.</p>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-bye-back">Вернуться к результату</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ МОДАЛЬНОЕ ОКНО ============ -->
+<div class="modal-backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-text">
+    <h2 class="modal-title" id="modal-title">—</h2>
+    <p class="modal-text" id="modal-text">—</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="modal-cancel">Отмена</button>
+      <button type="button" class="btn btn-primary" id="modal-ok">Ок</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/data/brows.js"></script>
+<script src="assets/js/data/lashes.js"></script>
+<script src="assets/js/engine.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
